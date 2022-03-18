@@ -1,0 +1,24 @@
+---
+- name: dump all
+  hosts: all
+  vars:
+    a: true
+
+  tasks:
+    - name: Print some debug information
+      debug:
+        msg: "{{ a }}"
+
+    - name: Conditional task
+      debug:
+        msg: "debug msg"
+      when: a | bool
+
+    - name: Echo variables
+      shell: echo {{ a | to_json }}
+      register: echo_std
+
+    - name: Print echo
+      debug:
+        msg: "{{ echo_std.stdout_lines }}"
+
