@@ -1,0 +1,6 @@
+---
+docker_version: "20.10.7"
+docker_compose_version: "1.29.2"
+docker_custom_daemon: false
+lazydocker_enabled: false
+lazydocker_version: "0.12"

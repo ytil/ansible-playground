@@ -1,0 +1,45 @@
+---
+- name: Install docker on Amazon Linux
+  include_tasks: aws.yml
+  when: ansible_distribution == "Amazon"
+
+- name: Create docker directory
+  file:
+    state: directory
+    path: /etc/docker
+    mode: 0755
+    group: root
+    owner: root
+
+- name: Add daemon.json for customizing docker
+  template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+    mode: 0644
+    group: root
+    owner: root
+  when: docker_custom_daemon
+  notify: restart_docker_daemon
+
+- name: Ensure docker running
+  notify: enable_docker
+
+- name: Install lazydocker
+  block:
+    - name: Get lazydocker archive
+      get_url:
+        url: 'https://github.com/jesseduffield/lazydocker/releases/download/v{{ lazydocker_version }}/lazydocker_{{ lazydocker_version }}_Linux_x86_64.tar.gz'
+        dest: '/usr/local/src/lazydocker.tar.gz'
+        mode: u=rwx,g=rx,o=
+      register: lazydocker_archive
+    - name: unpack lazydocker
+      unarchive:
+        src: '/usr/local/src/lazydocker.tar.gz'
+        dest: /usr/local/bin/
+        remote_src: yes
+        include:
+          - lazydocker
+      when: lazydocker_archive.changed
+  when:
+    - ansible_architecture == "x86_64"
+    - lazydocker_enabled
