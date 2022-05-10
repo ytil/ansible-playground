@@ -1,5 +1,19 @@
 ---
-- hosts: atlantis
-  become: true
-  roles:
-    - docker
+- name: "Playing with slack"
+  hosts: localhost
+  connection: local
+  vars:
+    token: "THB427BU0/B01BP0T5ZTM/IyRSF1UrbyoiPKo4bXMrGAkN"
+  tasks:
+#    - name: Send report to slack
+#      slack:
+#        msg: >
+#          {{ ansible_date_time.date }} {{ ansible_date_time.time }}
+#          ```report```
+#          `link`
+#        token: "{{ token |  }}"
+#      register: response
+
+    - name: Print response
+      debug:
+        msg: "{{ token | regex_replace(\"'\") }}"

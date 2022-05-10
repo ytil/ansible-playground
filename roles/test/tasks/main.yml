@@ -1,6 +1,0 @@
-- name: Privet mir
-  shell: echo privet mir
-
-- name: Print vars
-  debug:
-    var: run_3
