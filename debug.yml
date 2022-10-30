@@ -1,0 +1,10 @@
+- hosts: all
+  tags:
+    - never
+    - debug
+  vars:
+    count: 10
+  tasks:
+    - name: Print vars
+      ansible.builtin.debug:
+        msg: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"

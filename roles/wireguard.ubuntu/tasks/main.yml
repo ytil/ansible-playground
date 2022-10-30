@@ -1,0 +1,38 @@
+---
+- name: Update all packages to the latest version
+  apt:
+    upgrade: dist
+
+- name: Create config directory
+  ansible.builtin.file:
+    path: "{{ wireguard_config_directory }}"
+    state: directory
+    mode: '0755'
+
+- name: Prepare docker-compose config
+  vars:
+    host_external_ip: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+  ansible.builtin.template:
+    src: "roles/wireguard.ubuntu/templates/docker-compose.yml.j2"
+    dest: "{{ wireguard_config_directory }}/docker-compose.yml"
+    mode: '0644'
+
+- name: Run docker-compose
+  command: docker-compose up -d --remove-orphans
+  args:
+    chdir: "{{ wireguard_config_directory }}"
+  register: up_result
+  changed_when: '"done" in up_result.stderr'
+
+- name: Print output
+  debug:
+    msg: "{{ up_result }}"
+
+- name: Show QR-codes
+  command: docker exec -it wireguard /app/show-peer {{ range(1, wireguard_peers_number + 1) | list | join(' ') }}
+  changed_when: '"done" in up_result.stderr'
+  register: qr
+
+- name: Print QRs
+  debug:
+    msg: "{{ qr.stdout_lines }}"

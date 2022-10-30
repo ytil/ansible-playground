@@ -1,9 +1,0 @@
----
-- name: Restart Atlantis
-  service:
-    name: atlantis
-    state: restarted
-
-- name: Reload Systemd Daemon
-  systemd:
-    daemon_reload: true
