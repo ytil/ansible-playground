@@ -1,3 +1,2 @@
 [all]
-ubuntu-wireguard ansible_host=v1467238.hosted-by-vdsina.ru ansible_user=root
-ubuntu-wireguard2 ansible_host=v1469218.hosted-by-vdsina.ru ansible_user=root
+yc-monitoring ansible_host=51.250.78.110 ansible_user=ytil
